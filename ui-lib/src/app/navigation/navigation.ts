@@ -2,7 +2,7 @@ import { Component, signal, inject, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faTimes, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
-import { ThemeService } from '../../../services/theme.service';
+import { ThemeService } from '../services/theme.service';
 
 interface NavLink {
   path: string;
@@ -14,8 +14,8 @@ interface NavLink {
   imports: [RouterLink, RouterLinkActive, FontAwesomeModule],
   templateUrl: './navigation.html',
   host: {
-    '[class]': '"w-full"'
-  }
+    '[class]': '"w-full"',
+  },
 })
 export class Navigation {
   private readonly themeService = inject(ThemeService);
@@ -30,11 +30,11 @@ export class Navigation {
 
   protected readonly navLinks: NavLink[] = [
     { path: '/', label: 'Home' },
-    { path: '/ui-showcase', label: 'UI Showcase' }
+    { path: '/ui-showcase', label: 'UI Showcase' },
   ];
 
   toggleMobileMenu(): void {
-    this.mobileMenuOpen.update(value => !value);
+    this.mobileMenuOpen.update((value) => !value);
   }
 
   closeMobileMenu(): void {
