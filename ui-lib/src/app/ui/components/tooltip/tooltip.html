@@ -1,0 +1,10 @@
+@if (text() && isHovering()) {
+    <div [class]="tooltipClasses()" [style.background-color]="color()">
+        {{text()}}
+        <div [class]="arrowClasses()"
+             [style.border-top-color]="direction() === 'top' ? color() : 'transparent'"
+             [style.border-bottom-color]="direction() === 'bottom' ? color() : 'transparent'"
+             [style.border-left-color]="direction() === 'left' ? color() : 'transparent'"
+             [style.border-right-color]="direction() === 'right' ? color() : 'transparent'"></div>
+    </div>
+}

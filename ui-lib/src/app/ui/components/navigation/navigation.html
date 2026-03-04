@@ -1,0 +1,75 @@
+<nav class="bg-white dark:bg-secondary shadow-md text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo/Brand -->
+      <div class="flex-shrink-0">
+        <a
+          routerLink="/"
+          class="text-2xl font-poppins font-bold text-primary hover:opacity-80 transition-opacity"
+          aria-label="Home">
+          EcomApp
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex md:items-center md:gap-8">
+        @for (link of navLinks; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="text-primary font-semibold border-b-2 border-primary"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class=" hover:text-primary transition-colors py-2 px-1"
+            [attr.aria-current]="'page'">
+            {{ link.label }}
+          </a>
+        }
+
+        <!-- Dark Mode Toggle Button -->
+        <button
+          type="button"
+          (click)="toggleDarkMode()"
+          class="p-2 rounded-3xl bg-gray-600/60 backdrop-blur-md hover:bg-gray-600/90 transition-all cursor-pointer"
+          [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+          @if (isDarkMode()) {
+            <fa-icon [icon]="faSun" class="text-xl" aria-hidden="true" />
+          } @else {
+            <fa-icon [icon]="faMoon" class="text-xl" aria-hidden="true" />
+          }
+        </button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        type="button"
+        (click)="toggleMobileMenu()"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-md hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-colors"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-label="Toggle navigation menu">
+        @if (mobileMenuOpen()) {
+          <fa-icon [icon]="faTimes" class="text-xl" aria-hidden="true" />
+        } @else {
+          <fa-icon [icon]="faBars" class="text-xl" aria-hidden="true" />
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  @if (mobileMenuOpen()) {
+    <div class="md:hidden border-t border-gray-200 dark:border-gray-700">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        @for (link of navLinks; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="bg-primary text-white"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMobileMenu()"
+            class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary transition-colors"
+            [attr.aria-current]="'page'">
+            {{ link.label }}
+          </a>
+        }
+      </div>
+    </div>
+  }
+</nav>

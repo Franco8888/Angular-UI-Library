@@ -1,0 +1,165 @@
+@if (manager()) {
+    <div [class]="tableTheme().textColor">
+        <!-- Top Controls -->
+        <div class="flex justify-between flex-wrap gap-3 items-center mb-2">
+          <!-- Search Query Controls -->
+          @if (manager()?.searchColumns && searchableColumns().length > 0) {
+            <div class="flex flex-wrap gap-2 items-center">
+              <select
+                [value]="selectedQueryColumn() ?? ''"
+                (change)="onQueryColumnChange($event)"
+                [class]="'px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 transition-colors ' + tableTheme().tableOptionsBackgroundColor + ' ' + tableTheme().controlBorderColor + ' ' + tableTheme().controlHoverColor + ' ' + tableTheme().controlFocusRingColor"
+                aria-label="Select column to search"
+              >
+                <option value="">Select column...</option>
+                @for (column of searchableColumns(); track column.key) {
+                  <option [value]="column.key">{{ column.header }}</option>
+                }
+              </select>
+    
+              <input
+                type="text"
+                [value]="queryText()"
+                (input)="queryText.set($any($event.target).value)"
+                (keydown.enter)="onQuerySubmit()"
+                placeholder="Enter search query..."
+                [class]="'px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 transition-colors w-64 ' + tableTheme().tableOptionsBackgroundColor + ' ' + tableTheme().controlBorderColor + ' ' + tableTheme().controlHoverColor + ' ' + tableTheme().controlFocusRingColor"
+                aria-label="Search query"
+              />
+    
+              <button
+                (click)="onClearQuery()"
+                [class]="'px-2.5 cursor-pointer py-2 text-sm font-medium border rounded-md focus:outline-none focus:ring-2 transition-colors lg:px-3 lg:py-2 ' + tableTheme().tableOptionsBackgroundColor + ' ' + tableTheme().controlBorderColor + ' ' + tableTheme().controlHoverColor + ' ' + tableTheme().controlFocusRingColor"
+                [class.p-2]="true"
+                aria-label="Clear search"
+              >
+                <fa-icon [icon]="xMarkIcon" [class]="'lg:hidden ' + tableTheme().clearIconColor" />
+                <span class="hidden lg:inline">Clear</span>
+              </button>
+            </div>
+          }
+          @else {
+            <div></div>
+          }
+    
+          @if (manager()?.loadPage && totalItems() > 0) {
+              <div class="flex gap-3 items-center">
+              <!-- Page Size Selector -->
+              <div class="flex items-center gap-2">
+                <select
+                  id="pageSize"
+                  [value]="pageSize()"
+                  (change)="changePageSize($event)"
+                  [class]="'px-2 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-2 transition-colors ' + tableTheme().tableOptionsBackgroundColor + ' ' + tableTheme().controlBorderColor + ' ' + tableTheme().controlHoverColor + ' ' + tableTheme().controlFocusRingColor"
+                  aria-label="Select page size"
+                >
+                  <option value="5">5 per page</option>
+                  <option value="10"><span class="font-bold">10</span> per page</option>
+                  <option value="20">20 per page</option>
+                  <option value="50">50 per page</option>
+                </select>
+              </div>
+        
+              <!-- Paginator -->
+              <div class="flex items-center gap-2">
+                <button
+                  (click)="previousPage()"
+                  [disabled]="!hasPreviousPage"
+                  [class.opacity-50]="!hasPreviousPage"
+                  [class.cursor-not-allowed]="!hasPreviousPage"
+                  [class]="'p-2 cursor-pointer text-xs border rounded-md transition-colors ' + tableTheme().tableOptionsBackgroundColor + ' ' + tableTheme().controlBorderColor + ' ' + tableTheme().controlHoverColor"
+                  aria-label="Previous page"
+                >
+                  <fa-icon [icon]="chevronLeftIcon" />
+                </button>
+        
+                <span class="text-xs lg:text-sm">
+                  Page {{ page() }} of {{ totalPages }}
+                </span>
+        
+                <button
+                  (click)="nextPage()"
+                  [disabled]="!hasNextPage"
+                  [class.opacity-50]="!hasNextPage"
+                  [class.cursor-not-allowed]="!hasNextPage"
+                  [class]="'p-2 cursor-pointer text-xs border rounded-md transition-colors ' + tableTheme().tableOptionsBackgroundColor + ' ' + tableTheme().controlBorderColor + ' ' + tableTheme().controlHoverColor"
+                  aria-label="Next page"
+                >
+                  <fa-icon [icon]="chevronRightIcon" />
+                </button>
+              </div>
+              </div>
+          }
+    
+        </div>
+      
+        <!-- Table -->
+        <div class="overflow-x-auto rounded-lg min-h-32">
+            <table class="w-full min-w-max text-left text-xs lg:text-sm">
+                <!-- Header -->
+                <thead class="font-semibold">
+                    <tr [class]="'border-b ' + tableTheme().headerBorderColor + ' ' + tableTheme().headerBackgroundColor">
+                    @for (column of columns; track $index) {
+                        <th [class]="'px-2.5 py-2 lg:px-3.5 lg:py-2.5 border-r ' + tableTheme().headerColumnBorderColor">
+                        {{ column.header }}
+                        </th>
+                    }
+                    @if (manager()?.rowActions && manager()?.rowActions!.length > 0) {
+                        <th class="px-2.5 py-2 lg:px-3.5 lg:py-2.5">
+                        </th>
+                    }
+                    </tr>
+                </thead>
+                <!-- Body -->
+                <tbody class="relative">
+                    <!-- Loading Overlay -->
+                    @if (loading()) {
+                    <div [class]="'absolute inset-0 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg ' + tableTheme().loaderBackground">
+                        <div class="flex flex-col items-center gap-3">
+                        <div [class]="'w-10 h-10 border-4 rounded-full animate-spin ' + tableTheme().spinnerBorderColor + ' ' + tableTheme().spinnerAccentColor"></div>
+                        </div>
+                    </div>
+                    }
+                    @for (row of rows(); track $index) {
+                    <tr
+                        [class]="($last ? '' : 'border-b ' + tableTheme().rowBorderColor + ' ') + 'cursor-pointer ' + tableTheme().rowBackgroundColor + (selectable() ? ' ' + tableTheme().rowHoverColor : '')"
+                        (click)="onRowClicked(row)"
+                        >
+                        @for (column of columns; track $index) {
+                        <td class="px-2.5 py-2 lg:px-3.5 lg:py-2.5">
+                            @if (isTemplate(column.data)) {
+                            <ng-container *ngTemplateOutlet="getTemplate(column.data)!; context: { $implicit: row }" />
+                            } @else {
+                            {{ getRowData(row, column.data) }}
+                            }
+                        </td>
+                        }
+                        <td>
+                            <!-- Row Actions -->
+                            <div class="px-2.5 py-2 lg:px-3.5 lg:py-2.5 flex flex-row flex-wrap gap-2 items-center h-full">
+                            @if (manager()?.rowActions && manager()?.rowActions!.length > 0) {
+                                @for(action of manager()?.rowActions; track $index) {
+                                @if (action.shown === undefined || (action.shown !== undefined && action.shown(row))) {
+                                    <div class="text-sm cursor-pointer relative" [style.color]="'var(' + action.color + ')'"
+                                    (click)="onRowActionClicked(row, action)" (mouseenter)="tooltipRefAction.isHovering.set(true)" (mouseleave)="tooltipRefAction.isHovering.set(false)">
+                                        <fa-icon [icon]="action.icon" class="hover:opacity-80" />
+                                        <app-tooltip #tooltipRefAction [text]="action.tooltip" color="#72727d" direction="top"></app-tooltip>
+                                    </div>
+                                }
+                                }
+                            }
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (rows().length === 0) {
+  <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+    No data available
+  </div>
+}

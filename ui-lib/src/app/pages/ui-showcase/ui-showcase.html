@@ -1,0 +1,57 @@
+<p class="text-primary">Showcase works!</p>
+
+<p class="text-3xl font-poppins font-bold mt-8">Table</p>
+
+<p class="text-xl">Normal Load Table</p>
+<div class="p-8">
+    @if (userTableManager()) {
+        <app-table [manager]="userTableManager()!" [theme]="themeService.theme()" />
+    }
+</div>
+
+<p class="text-xl">Paged Table</p>
+<div class="p-8">
+</div>
+
+<ng-template #avatar let-user>
+    <img [src]="user.avatar" [alt]="user.name + ' avatar'" class="w-10 h-10 rounded-full object-cover" />
+</ng-template>
+
+<p class="text-3xl font-poppins font-bold">Buttons</p>
+
+<!-- <p class="text-xl">Variants</p>
+<div class="flex gap-2 pb-3">
+    <app-button (clicked)="handleClick()" text="Primary"/>
+    <app-button (clicked)="handleClick()" variant="secondary" text="Secondary"/>
+    <app-button (clicked)="handleClick()" variant="ghost" text="Ghost"/>
+    <app-button (clicked)="handleClick()" variant="success" text="Success"/>
+    <app-button (clicked)="handleClick()" variant="error" text="Error"/>
+    <app-button (clicked)="handleClick()" variant="warn" text="Warn"/>
+</div> -->
+
+<p class="text-xl">Types</p>
+
+<p class="text-xl">Icon Buttons Variants</p>
+
+<p class="text-xl">Text Icon Button Variants</p>
+
+<div class="relative w-fit" (mouseenter)="tooltipRef.isHovering.set(true)" (mouseleave)="tooltipRef.isHovering.set(false)">
+    <p>Hover Me
+        <app-tooltip #tooltipRef [text]="'I am hovered'" direction="top"></app-tooltip>
+    </p>
+</div>
+
+<p class="text-xl">Icon Button examples</p>
+
+<div class="flex gap-2 pb-5 p-8">
+
+    
+    <app-button (clicked)="handleClick()" [icon]="faCoffee" text="Secondary"/>
+    <app-button (clicked)="handleClick()" [icon]="faCoffee" tooltip="My tooltip"/>
+    <app-button (clicked)="handleClick()" [icon]="faCoffee"/>
+    <app-button (clicked)="handleClick()" [icon]="faCoffee" [loading]="true"/>
+    <!-- TODO: Check icon loading button -->
+
+</div>
+
+

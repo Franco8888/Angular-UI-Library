@@ -1,0 +1,14 @@
+<div class="relative w-fit" (mouseenter)="tooltipRef.isHovering.set(true)" (mouseleave)="tooltipRef.isHovering.set(false)">
+    <div class="flex gap-2 rounded-md w-fit cursor-pointer select-none" [class]="appliedClasses()" (click)="onClick()">
+        @if (icon() && !loading()) {
+            <fa-icon [icon]="icon()!" />
+        }
+        @if (loading()) {
+            <fa-icon [icon]="faSpinner" class="animate-spin" />
+        }
+        @if (text()) {
+            {{text()}}
+        }
+    </div>
+    <app-tooltip #tooltipRef [text]="tooltip()" direction="top"></app-tooltip>
+</div>

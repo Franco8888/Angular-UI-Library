@@ -1,3 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary-50: #81dad5;
+  --color-primary-100: #68d3cc;
+  --color-primary-200: #4fcbc4;
+  --color-primary-300: #35c4bb;
+  --color-primary-400: #1cbcb3;
+  --color-primary: #03B5AA;  
+  --color-primary-600: #03a399;
+  --color-primary-700: #029188;
+  --color-primary-800: #027f77;
+  --color-primary-900: #026d66;
+
+  --color-secondary: #0D1F2D;
+
+  --color-success: #22c55e;
+
+  --color-error: #ef4444;
+
+  --color-warning: #f59e0b;
+
+  --color-default-font: #080808;
+  --color-default-bg: #f2f2f5;
+
+  /* Fonts */
+  --font-sans: 'Inter', 'sans-serif';
+  --font-poppins: 'Poppins', 'sans-serif';
+}
+
+.dark {
+  
+  --color-default-font: #ffffff;
+  --color-default-bg: #28282b;
+  
+  --color-primary: #03B5AA;
+}
